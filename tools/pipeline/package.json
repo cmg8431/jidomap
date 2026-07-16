@@ -10,15 +10,19 @@
     "generate:boundaries": "bun run src/index.ts boundaries",
     "lint": "biome check .",
     "check-types": "tsc --noEmit",
-    "clean": "rm -rf node_modules .turbo"
+    "clean": "rm -rf node_modules .turbo",
+    "generate:underground": "bun run src/underground.ts"
   },
   "dependencies": {
-    "osmtogeojson": "3.0.0-beta.5"
+    "osmtogeojson": "3.0.0-beta.5",
+    "proj4": "^2.15.0",
+    "shapefile": "^0.6.6"
   },
   "devDependencies": {
     "@jidomap/typescript": "workspace:*",
     "@types/bun": "^1.3.14",
     "@types/geojson": "^7946.0.14",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "@types/proj4": "^2.5.5"
   }
 }
