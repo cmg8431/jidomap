@@ -1,0 +1,29 @@
+{
+  "name": "@jidomap/data",
+  "version": "0.0.1",
+  "description": "한국 지리 데이터 스냅샷 (OSM 추출) — 지하철 노선·역, 행정구역. tools/pipeline 이 주기적으로 재생성한다",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./index.ts",
+    "./meta.json": "./meta.json",
+    "./subway/*": "./subway/*",
+    "./boundaries/*": "./boundaries/*"
+  },
+  "files": [
+    "index.ts",
+    "meta.json",
+    "subway",
+    "boundaries"
+  ],
+  "scripts": {
+    "lint": "biome check .",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf node_modules .turbo"
+  },
+  "devDependencies": {
+    "@jidomap/typescript": "workspace:*",
+    "@types/geojson": "^7946.0.14",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "updatedAt": "2026-07-16",
+  "source": "OpenStreetMap contributors (ODbL)",
+  "regions": ["gwangju", "seoul"],
+  "boundaries": true,
+  "pipeline": "tools/pipeline"
+}
