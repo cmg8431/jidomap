@@ -1,0 +1,3 @@
+[install]
+# 워크스페이스 심볼릭 링크가 단일 maplibre-gl·react 인스턴스로 해석되도록 npm 스타일로 호이스팅한다.
+linker = "hoisted"

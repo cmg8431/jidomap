@@ -1,0 +1,3 @@
+{
+  "extends": "@jidomap/typescript/base.json"
+}

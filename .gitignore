@@ -1,0 +1,28 @@
+# Dependencies
+node_modules
+
+# Local env files
+.env
+.env.local
+
+# Turbo
+.turbo
+
+# Build outputs
+dist
+build
+out
+
+# IDE
+/.idea
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Debug
+logs
+*.log
+
+# Misc
+.DS_Store
+*.pem

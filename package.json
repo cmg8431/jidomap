@@ -1,0 +1,49 @@
+{
+  "name": "jidomap",
+  "version": "0.0.1",
+  "private": true,
+  "description": "키 없이 쓰는 한국형 지도 — MapLibre 기반, 한글 라벨·지하철·POI 내장",
+  "maintainers": [
+    "Mingi Choe <cmg8431@gmail.com>"
+  ],
+  "license": "MIT",
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*",
+      "packages/configs/*",
+      "tools/*"
+    ],
+    "catalog": {
+      "@types/node": "^26.1.1",
+      "@types/react": "^19.2.17",
+      "@types/react-dom": "^19.2.3",
+      "@vitejs/plugin-react": "^5.0.0",
+      "maplibre-gl": "^5.6.0",
+      "react": "^19.2.7",
+      "react-dom": "^19.2.7",
+      "turbo": "^2.10.4",
+      "typescript": "^5.9.3",
+      "vite": "^7.1.0"
+    }
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "check-types": "turbo run check-types",
+    "lint": "biome check .",
+    "check": "biome check --write .",
+    "format": "biome format --write .",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.3",
+    "@jidomap/typescript": "workspace:*",
+    "turbo": "catalog:",
+    "typescript": "catalog:"
+  },
+  "packageManager": "bun@1.3.6",
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "tui",
+  "globalDependencies": ["biome.json", "tsconfig.json"],
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "check-types": {
+      "outputs": []
+    },
+    "lint": {
+      "outputs": []
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}
