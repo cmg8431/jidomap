@@ -1,0 +1,285 @@
+/**
+ * jidomap 기본 스타일 — 스타일 라이브러리에 의존하지 않는 순정 CSS.
+ * 모든 값은 CSS 변수로 노출돼 어떤 환경(vanilla·styled-components·panda·tailwind)에서도
+ * `--jido-*` 를 덮어써 테마를 바꿀 수 있다. import 안 해도 지도는 동작하지만,
+ * 카드·컨트롤·마커 기본 톤을 입히려면 `@jidomap/react/styles.css` 를 불러온다.
+ */
+
+.jido-map {
+  /* 색 토큰 (라이트) */
+  --jido-bg: #ffffff;
+  --jido-fg: #191f28;
+  --jido-muted: #8b95a1;
+  --jido-border: #e5e8eb;
+  --jido-accent: #2272eb;
+  --jido-popover-bg: #ffffff;
+  --jido-popover-fg: #191f28;
+  --jido-tooltip-bg: #191f28;
+  --jido-tooltip-fg: #ffffff;
+  --jido-control-bg: #ffffff;
+  --jido-control-hover: #f2f4f6;
+  --jido-marker: #2272eb;
+  /* 형태 토큰 */
+  --jido-radius: 10px;
+  --jido-shadow: 0 2px 6px rgba(2, 32, 71, 0.08), 0 8px 24px rgba(2, 32, 71, 0.12);
+
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.jido-map[data-jido-theme="dark"] {
+  --jido-bg: #1c1f24;
+  --jido-fg: #e8ecf2;
+  --jido-muted: #8b95a1;
+  --jido-border: #2a2f37;
+  --jido-accent: #4d8dff;
+  --jido-popover-bg: #23272e;
+  --jido-popover-fg: #e8ecf2;
+  --jido-tooltip-bg: #e8ecf2;
+  --jido-tooltip-fg: #191f28;
+  --jido-control-bg: #23272e;
+  --jido-control-hover: #2c313a;
+  --jido-marker: #4d8dff;
+  --jido-shadow: 0 2px 6px rgba(0, 0, 0, 0.28), 0 8px 24px rgba(0, 0, 0, 0.36);
+}
+
+/* 로딩 인디케이터 */
+.jido-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: color-mix(in srgb, var(--jido-bg) 55%, transparent);
+  backdrop-filter: blur(2px);
+}
+.jido-loader__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jido-muted);
+  animation: jido-pulse 1s ease-in-out infinite;
+}
+.jido-loader__dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.jido-loader__dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes jido-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* 마커 */
+.jido-marker {
+  position: relative;
+  cursor: pointer;
+}
+.jido-marker__dot {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--jido-marker);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+.jido-marker-label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--jido-fg);
+  text-shadow:
+    0 0 3px var(--jido-bg),
+    0 0 3px var(--jido-bg);
+  pointer-events: none;
+}
+.jido-marker-label[data-position="top"] {
+  bottom: 100%;
+  margin-bottom: 4px;
+}
+.jido-marker-label[data-position="bottom"] {
+  top: 100%;
+  margin-top: 4px;
+}
+
+/* 팝업 카드 */
+.jido-popup {
+  position: relative;
+  max-width: 248px;
+  padding: 12px;
+  border-radius: var(--jido-radius);
+  border: 1px solid var(--jido-border);
+  background: var(--jido-popover-bg);
+  color: var(--jido-popover-fg);
+  box-shadow: var(--jido-shadow);
+  font-size: 13px;
+  line-height: 1.5;
+  animation: jido-pop 0.16s ease-out;
+}
+@keyframes jido-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.jido-popup__close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--jido-muted);
+  cursor: pointer;
+  font-size: 15px;
+}
+.jido-popup__close:hover {
+  background: var(--jido-control-hover);
+  color: var(--jido-fg);
+}
+
+/* 툴팁 */
+.jido-tooltip {
+  padding: 4px 8px;
+  border-radius: 7px;
+  background: var(--jido-tooltip-bg);
+  color: var(--jido-tooltip-fg);
+  font-size: 12px;
+  font-weight: 500;
+  pointer-events: none;
+  animation: jido-pop 0.16s ease-out;
+}
+
+/* 출처 표시(attribution) — 기본은 접힌 ⓘ 배지, 펼쳐도 은은하게 */
+.jido-map .maplibregl-ctrl-attrib {
+  font-size: 10px;
+  background: color-mix(in srgb, var(--jido-bg) 78%, transparent);
+  border-radius: 12px;
+}
+.jido-map .maplibregl-ctrl-attrib a {
+  color: var(--jido-muted);
+}
+.jido-map .maplibregl-ctrl-attrib-button {
+  opacity: 0.5;
+  transform: scale(0.85);
+}
+.jido-map .maplibregl-ctrl-attrib-button:hover {
+  opacity: 0.85;
+}
+
+/* maplibre 기본 팝업 크롬 제거 — 우리 카드가 그대로 보이게 */
+.jido-map .maplibregl-popup-content {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+.jido-map .maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+.jido-map .maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+.jido-map .maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+  border-top-color: var(--jido-popover-bg);
+}
+.jido-map .maplibregl-popup-anchor-top .maplibregl-popup-tip,
+.jido-map .maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
+.jido-map .maplibregl-popup-anchor-top-right .maplibregl-popup-tip {
+  border-bottom-color: var(--jido-popover-bg);
+}
+.jido-map .maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: var(--jido-popover-bg);
+}
+.jido-map .maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: var(--jido-popover-bg);
+}
+
+/* 컨트롤 */
+.jido-controls {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.jido-controls[data-position="top-left"] {
+  top: 8px;
+  left: 8px;
+}
+.jido-controls[data-position="top-right"] {
+  top: 8px;
+  right: 8px;
+}
+.jido-controls[data-position="bottom-left"] {
+  bottom: 40px;
+  left: 8px;
+}
+.jido-controls[data-position="bottom-right"] {
+  bottom: 40px;
+  right: 8px;
+}
+.jido-control-group {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--jido-border);
+  background: var(--jido-control-bg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.jido-control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--jido-fg);
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.12s ease;
+}
+.jido-control-btn:not(:last-child) {
+  border-bottom: 1px solid var(--jido-border);
+}
+.jido-control-btn:hover {
+  background: var(--jido-control-hover);
+}
+.jido-control-btn:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.jido-compass {
+  width: 20px;
+  height: 20px;
+  color: var(--jido-muted);
+  transition: transform 0.2s ease;
+}
+.jido-spin {
+  animation: jido-rotate 0.8s linear infinite;
+}
+@keyframes jido-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

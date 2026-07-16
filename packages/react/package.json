@@ -1,0 +1,39 @@
+{
+  "name": "@jidomap/react",
+  "version": "0.0.1",
+  "description": "한국형 지도 React 컴포넌트 — mapcn 호환 API에 한글·지하철·POI를 얹고, 스타일 라이브러리 무의존",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles.css"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "lint": "biome check .",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf node_modules .turbo dist"
+  },
+  "peerDependencies": {
+    "maplibre-gl": ">=4",
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "dependencies": {
+    "@jidomap/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@jidomap/typescript": "workspace:*",
+    "@types/geojson": "^7946.0.14",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "maplibre-gl": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}
