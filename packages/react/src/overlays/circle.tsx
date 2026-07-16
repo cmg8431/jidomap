@@ -16,7 +16,7 @@ export type MapCircleProps = {
   strokeWidth?: number;
 };
 
-/** 중심 + 반경(m) 원 — 카카오맵 Circle 대응. 도보권·반경 표시에 쓴다 */
+/** 중심 + 반경(m) 원 — 도보권·반경 표시에 쓴다 */
 export function MapCircle({
   longitude,
   latitude,

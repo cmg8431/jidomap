@@ -1,5 +1,5 @@
 /**
- * 지하철 출구 번호 배지 — 당근·네이버식 노란 라운드 사각 + 진한 숫자.
+ * 지하철 출구 번호 배지 — 노란 라운드 사각 + 진한 숫자.
  * styleimagemissing 훅에서 요청 시 즉석 생성된다. 브라우저 전용.
  */
 export function buildExitBadge(ref: string): ImageData | null {

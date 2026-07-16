@@ -177,7 +177,7 @@ export const POI_CATEGORIES: Record<string, PoiCategory> = {
   },
 };
 
-/** 기본 노출 세트 — 네이버식 정보 밀도의 핵심(학교·병원·마트·편의점·문화) */
+/** 기본 노출 세트 — 생활 정보 밀도의 핵심(학교·병원·마트·편의점·문화) */
 export const DEFAULT_POI_CATEGORY_IDS = ['edu', 'health', 'market', 'shop', 'culture'];
 
 export interface PoiLayerOptions {
@@ -214,7 +214,7 @@ async function buildPoiBadge(category: PoiCategory, theme: Theme): Promise<Image
 
   ctx.beginPath();
   ctx.arc(margin + size / 2, margin + size / 2, size / 2, 0, Math.PI * 2);
-  // 라이트: 네이버식 흰 배지 + 컬러 글리프 · 다크: 당근식 뮤트 채움 + 흰 글리프
+  // 라이트: 흰 배지 + 컬러 글리프 · 다크: 뮤트 톤 채움 + 흰 글리프
   ctx.fillStyle = theme === 'dark' ? category.darkColor : '#ffffff';
   ctx.fill();
   ctx.lineWidth = 1.2 * dpr;

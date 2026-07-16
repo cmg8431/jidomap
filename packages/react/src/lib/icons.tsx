@@ -1,7 +1,7 @@
 import type { SVGProps } from 'react';
 
 /**
- * lucide 계열 인라인 아이콘 (MIT). lucide-react 에 의존하지 않기 위해
+ * 인라인 아이콘 — 외부 아이콘 패키지에 의존하지 않기 위해
  * 컨트롤·팝업에 필요한 몇 개만 직접 넣는다.
  */
 function Icon({ children, ...props }: SVGProps<SVGSVGElement>) {

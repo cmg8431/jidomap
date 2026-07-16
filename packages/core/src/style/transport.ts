@@ -11,7 +11,7 @@ export function emphasizeTransport(map: MaplibreMap, theme: Theme): void {
     const id = layer.id.toLowerCase();
     if (/label|name|shield/.test(id)) continue;
 
-    // 고속도로·간선 — 당근식 웜 앰버 (positron 은 motorway 가 trunk 레이어에 합쳐져 있다)
+    // 고속도로·간선 — 웜 앰버 (positron 은 motorway 가 trunk 레이어에 합쳐져 있다)
     if (/motorway|expressway|trunk/.test(id)) {
       if (/casing/.test(id)) {
         map.setPaintProperty(layer.id, 'line-color', theme === 'dark' ? '#2c2517' : '#e5b054');

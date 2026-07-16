@@ -1,7 +1,7 @@
 import type { LngLat } from '../types';
 
 /**
- * 중심 + 반경(m)으로 근사 원 폴리곤을 만든다 (카카오 Circle 대응).
+ * 중심 + 반경(m)으로 근사 원 폴리곤을 만든다.
  * MapLibre 는 지리적 원을 직접 못 그리므로 다각형으로 근사한다.
  */
 export function circlePolygon(
