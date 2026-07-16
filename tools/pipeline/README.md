@@ -44,3 +44,7 @@ OSM 추출이 덮어쓰지 않는다 — 서울처럼 실측 데이터가 있으
 - KTX·일반철도 역 — [국가철도공단 역사정보](https://www.data.go.kr/data/15093755/fileData.do) 활용 가능
 - 역 좌표 검증 — [전국도시철도역사정보표준데이터](https://www.data.go.kr/data/15013205/standard.do)와 대조해 OSM 드리프트 감지
 - Overpass → [osm.kr non-military 추출본](https://tiles.osm.kr/) pbf 배치 추출 전환 검토 (군사시설 이슈 승계 + 미러 의존 제거)
+
+## CI 트리거
+`claude/**` 브랜치에서 `tools/pipeline/**` 변경을 push 하면 data-refresh 워크플로가 돌아
+생성 데이터를 해당 브랜치 기준 PR 로 올린다 (스케줄 실행은 기존대로 main 기준).
