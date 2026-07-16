@@ -1,0 +1,29 @@
+{
+  "name": "@jidomap/playground",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3200",
+    "build": "vite build",
+    "preview": "vite preview --port 3200",
+    "lint": "biome check .",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf node_modules .turbo dist"
+  },
+  "dependencies": {
+    "@jidomap/data": "workspace:*",
+    "@jidomap/react": "workspace:*",
+    "maplibre-gl": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@jidomap/typescript": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}
