@@ -5,6 +5,10 @@ on:
     # 매월 1일 03:17 UTC — OSM 원천에서 한국 지리 데이터 재추출
     - cron: '17 3 1 * *'
   workflow_dispatch: {}
+  push:
+    branches: ['claude/**']
+    paths:
+      - 'tools/pipeline/**'
 
 permissions:
   contents: write

@@ -3,10 +3,11 @@ name: deploy-playground
 on:
   workflow_dispatch: {}
   push:
-    branches: [main]
+    branches: [main, 'claude/**']
     paths:
       - 'apps/playground/**'
       - 'packages/**'
+      - '.github/workflows/deploy-playground.yml'
 
 permissions:
   contents: read
