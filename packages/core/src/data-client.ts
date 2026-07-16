@@ -12,6 +12,8 @@ export interface SubwayData {
   stations: GeoJSON.FeatureCollection;
   /** 출구 — 권역에 따라 없을 수 있다 */
   exits?: GeoJSON.FeatureCollection;
+  /** 실측 지하통로 폴리곤 — 권역에 따라 없을 수 있다 */
+  passages?: GeoJSON.FeatureCollection;
 }
 
 export const DEFAULT_DATA_BASE = 'https://cdn.jsdelivr.net/npm/@jidomap/data@0';
@@ -29,6 +31,7 @@ export function subwayDataUrls(region: SubwayRegion, base = DEFAULT_DATA_BASE) {
     lines: `${base}/subway/${region}-lines.json`,
     stations: `${base}/subway/${region}-stations.json`,
     exits: `${base}/subway/${region}-exits.json`,
+    passages: `${base}/subway/${region}-passages.json`,
   };
 }
 
@@ -55,11 +58,14 @@ export function fetchSubwayData(
       if (!res.ok) throw new Error(`지하철 역 데이터 로드 실패: ${res.status}`);
       return res.json() as Promise<GeoJSON.FeatureCollection>;
     }),
-    // 출구는 부가 데이터 — 없거나 실패해도 무시
+    // 출구·지하통로는 부가 데이터 — 없거나 실패해도 무시
     fetcher(urls.exits)
       .then((res) => (res.ok ? (res.json() as Promise<GeoJSON.FeatureCollection>) : undefined))
       .catch(() => undefined),
-  ]).then(([lines, stations, exits]) => ({ lines, stations, exits }));
+    fetcher(urls.passages)
+      .then((res) => (res.ok ? (res.json() as Promise<GeoJSON.FeatureCollection>) : undefined))
+      .catch(() => undefined),
+  ]).then(([lines, stations, exits, passages]) => ({ lines, stations, exits, passages }));
 
   // 실패한 요청은 캐시에서 지워 재시도 가능하게 한다
   promise.catch(() => cache.delete(key));

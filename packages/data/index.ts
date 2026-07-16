@@ -28,11 +28,15 @@ export interface SubwayExitProperties {
 }
 export type SubwayExits = FeatureCollection<Point, SubwayExitProperties>;
 
+export type SubwayPassages = FeatureCollection;
+
 export interface SubwayBundle {
   lines: SubwayLines;
   stations: SubwayStations;
   /** 출구 (권역별로 없을 수 있음) */
   exits?: SubwayExits;
+  /** 실측 지하통로 폴리곤 — generate:underground 로 생성되면 추가 */
+  passages?: SubwayPassages;
 }
 
 /** 수도권(서울·경기·인천) 지하철 — OSM 추출 스냅샷 */

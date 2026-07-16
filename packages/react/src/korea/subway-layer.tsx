@@ -65,6 +65,7 @@ export function SubwayLayer({
       lines: resolved.lines,
       stations: resolved.stations,
       exits: showExits ? resolved.exits : undefined,
+      passages: resolved.passages,
       theme: resolvedTheme,
       minzoom,
     });

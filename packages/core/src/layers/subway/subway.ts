@@ -11,6 +11,11 @@ export interface SubwayLayerOptions {
   stations: GeoJSON.FeatureCollection;
   /** 출구 포인트 (properties.ref) — 있으면 확대 시 노란 출구번호 배지를 그린다 */
   exits?: GeoJSON.FeatureCollection;
+  /**
+   * 실제 지하통로 폴리곤 (공공데이터) — 있으면 합성 회랑 대신 이걸 그린다.
+   * 없고 exits 만 있으면 역·출구로 회랑을 합성한다.
+   */
+  passages?: GeoJSON.FeatureCollection;
   theme?: Theme;
   /** 노선이 보이기 시작하는 최소 줌 (기본 9.5) */
   minzoom?: number;
@@ -162,10 +167,14 @@ export function addSubwayLayers(map: MaplibreMap, options: SubwayLayerOptions): 
     },
   });
 
-  // 확대 줌: 당근식 노란 출구번호 배지 + 역 영역(출구 hull 합성) 폴리곤
-  if (options.exits) {
-    // 역 영역 — 당근식 웜 앰버 하이라이트 (라벨 아래)
-    const areas = buildStationAreas(options.stations, options.exits);
+  // 확대 줌: 당근식 노란 출구번호 배지 + 역 영역 폴리곤
+  if (options.exits || options.passages) {
+    // 역 영역 — 실측 지하통로가 있으면 그대로, 없으면 역·출구로 회랑 합성
+    const areas =
+      options.passages ??
+      (options.exits
+        ? buildStationAreas(options.stations, options.exits)
+        : { type: 'FeatureCollection' as const, features: [] });
     if (areas.features.length > 0) {
       map.addSource(SRC_AREAS, { type: 'geojson', data: areas });
       map.addLayer(
@@ -192,17 +201,19 @@ export function addSubwayLayers(map: MaplibreMap, options: SubwayLayerOptions): 
       );
     }
 
-    map.addSource(SRC_EXITS, { type: 'geojson', data: options.exits });
-    map.addLayer({
-      id: 'jido-subway-exit',
-      type: 'symbol',
-      source: SRC_EXITS,
-      minzoom: 15.5,
-      layout: {
-        'icon-image': ['concat', EXIT_PREFIX, ['get', 'ref']],
-        'icon-allow-overlap': false,
-      },
-    });
+    if (options.exits) {
+      map.addSource(SRC_EXITS, { type: 'geojson', data: options.exits });
+      map.addLayer({
+        id: 'jido-subway-exit',
+        type: 'symbol',
+        source: SRC_EXITS,
+        minzoom: 15.5,
+        layout: {
+          'icon-image': ['concat', EXIT_PREFIX, ['get', 'ref']],
+          'icon-allow-overlap': false,
+        },
+      });
+    }
   }
 
   return { remove };
