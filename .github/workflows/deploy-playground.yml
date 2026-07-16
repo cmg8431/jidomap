@@ -1,5 +1,4 @@
 name: deploy-playground
-# 레포 public 전환 후 재실행 트리거
 
 on:
   workflow_dispatch: {}
