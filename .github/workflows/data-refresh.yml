@@ -15,11 +15,19 @@ permissions:
   contents: write
   pull-requests: write
 
+# 연속 push 시 순차 실행 — 앞 런의 데이터 커밋과 non-fast-forward 충돌 방지
+concurrency:
+  group: data-refresh-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # 트리거 시점 SHA 가 아니라 실행 시점 브랜치 팁 — 큐에서 기다린 런도 최신 위에서 돈다
+          ref: ${{ github.ref_name }}
 
       - uses: oven-sh/setup-bun@v2
         with:

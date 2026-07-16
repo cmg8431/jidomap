@@ -4,13 +4,15 @@ import { type OsmElement, overpass, quantize } from './overpass';
 /**
  * 권역 정의 — ISO3166-2 코드로 Overpass area 를 잡는다.
  * 광역 노선이 행정구역을 넘나들므로 권역은 인접 시도를 묶는다.
+ * 17개 시도 전부가 어느 한 권역에 속한다 — 도시철도가 없는 시도에서도
+ * 지하보도·지하상가(passages)와 미래 노선 개통분이 전국 커버된다.
  */
 export const SUBWAY_REGIONS: Record<string, string[]> = {
-  seoul: ['KR-11', 'KR-41', 'KR-28'], // 서울·경기·인천 (수도권)
-  busan: ['KR-26', 'KR-48'], // 부산·경남 (부산김해경전철 포함)
+  seoul: ['KR-11', 'KR-41', 'KR-28', 'KR-42'], // 서울·경기·인천·강원 (수도권+GTX/경춘 연장 대비)
+  busan: ['KR-26', 'KR-48', 'KR-31'], // 부산·경남·울산 (부산김해경전철, 동남권 광역철도 대비)
   daegu: ['KR-27', 'KR-47'], // 대구·경북 (대구권 광역전철 포함)
-  gwangju: ['KR-29'],
-  daejeon: ['KR-30', 'KR-43'], // 대전·충북 (충청권 광역철도 대비)
+  gwangju: ['KR-29', 'KR-45', 'KR-46', 'KR-49'], // 광주·전북·전남·제주 (호남권 — 제주는 지하상가만)
+  daejeon: ['KR-30', 'KR-43', 'KR-44', 'KR-50'], // 대전·충북·충남·세종 (충청권 광역철도 대비)
 };
 
 interface LineFeature {
