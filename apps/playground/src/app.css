@@ -704,8 +704,8 @@ body,
 /* 워드마크 로고 — currentColor 마스크라 테마를 따라간다 */
 .wordmark {
   display: inline-block;
-  width: 63px;
-  height: 21px;
+  width: 67px;
+  height: 18px;
   background: currentColor;
   mask: url("./logo.svg") no-repeat center / contain;
   -webkit-mask: url("./logo.svg") no-repeat center / contain;

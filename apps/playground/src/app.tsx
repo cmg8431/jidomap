@@ -51,6 +51,14 @@ const STYLE_OPTIONS = [
 ] as const;
 type StyleKey = (typeof STYLE_OPTIONS)[number]['key'];
 
+/** 각 스타일의 다크 변형 — 다크 테마에서도 스타일 선택이 살아있다 */
+const DARK_VARIANT: Record<StyleKey, keyof typeof STYLE_PRESETS> = {
+  positron: 'dark',
+  voyager: 'dark',
+  liberty: 'ofm-dark',
+  bright: 'fiord',
+};
+
 const ACCENTS = ['#2272eb', '#00a76f', '#ff6f0f', '#7c3aed', '#e8467c'];
 
 const INITIAL_VIEW = { center: [126.9965, 37.5445] as [number, number], zoom: 11.8 };
@@ -260,7 +268,12 @@ function SearchBox({
 export function App() {
   const mapRef = useRef<MaplibreMap>(null);
   const [mobile, setMobile] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  // 시스템 선호를 초기값으로 — 이후엔 토글로 제어
+  const [theme, setTheme] = useState<'light' | 'dark'>(() =>
+    typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light',
+  );
   const [styleKey, setStyleKey] = useState<StyleKey>('positron');
   const [accent, setAccent] = useState(ACCENTS[0] ?? '#2272eb');
   const [subway, setSubway] = useState(true);
@@ -361,7 +374,7 @@ export function App() {
       ref={mapRef}
       theme={theme}
       tokens={{ accent, marker: accent }}
-      styles={{ light: STYLE_PRESETS[styleKey], dark: STYLE_PRESETS.dark }}
+      styles={{ light: STYLE_PRESETS[styleKey], dark: STYLE_PRESETS[DARK_VARIANT[styleKey]] }}
       center={INITIAL_VIEW.center}
       zoom={INITIAL_VIEW.zoom}
       maxBounds={[
@@ -464,20 +477,18 @@ export function App() {
     <>
       <section className="sec">
         <h3 className="sec__title">지도 스타일</h3>
-        <div className="tgroup" data-disabled={theme === 'dark'}>
+        <div className="tgroup">
           {STYLE_OPTIONS.map((option) => (
             <button
               key={option.key}
               type="button"
-              disabled={theme === 'dark'}
-              data-active={theme === 'light' && styleKey === option.key}
+              data-active={styleKey === option.key}
               onClick={() => setStyleKey(option.key)}
             >
               {option.label}
             </button>
           ))}
         </div>
-        {theme === 'dark' && <p className="sec__hint">다크 테마는 Dark Matter 스타일로 고정돼요</p>}
       </section>
 
       <section className="sec">
