@@ -13,6 +13,8 @@ export const STYLE_PRESETS = {
   'dark-matter': 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
   liberty: 'https://tiles.openfreemap.org/styles/liberty',
   bright: 'https://tiles.openfreemap.org/styles/bright',
+  'ofm-dark': 'https://tiles.openfreemap.org/styles/dark',
+  fiord: 'https://tiles.openfreemap.org/styles/fiord',
 } as const;
 
 export type StylePreset = keyof typeof STYLE_PRESETS;

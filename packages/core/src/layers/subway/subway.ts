@@ -35,6 +35,7 @@ const EXIT_PREFIX = 'jido-exitbadge:';
 
 const LAYER_IDS = [
   'jido-subway-area',
+  'jido-subway-area-path',
   'jido-subway-line-casing',
   'jido-subway-line',
   'jido-subway-station',
@@ -43,7 +44,7 @@ const LAYER_IDS = [
 ];
 
 /**
- * 네이버·카카오처럼 지하철 노선을 공식 색상으로, 역은 노선 배지 + 이름으로 그린다.
+ * 지하철 노선을 공식 색상으로, 역은 노선 배지 + 이름으로 그린다.
  * 스타일이 로드된 뒤 호출한다. 반환된 핸들의 remove() 로 정리한다.
  * 테마 전환(setStyle) 후에는 소스가 사라지므로 다시 호출해야 한다.
  */
@@ -167,7 +168,7 @@ export function addSubwayLayers(map: MaplibreMap, options: SubwayLayerOptions): 
     },
   });
 
-  // 확대 줌: 당근식 노란 출구번호 배지 + 역 영역 폴리곤
+  // 확대 줌: 노란 출구번호 배지 + 역 영역 폴리곤
   if (options.exits || options.passages) {
     // 역 영역 — 실측 지하통로가 있으면 그대로, 없으면 역·출구로 회랑 합성
     const areas =
@@ -176,16 +177,19 @@ export function addSubwayLayers(map: MaplibreMap, options: SubwayLayerOptions): 
         ? buildStationAreas(options.stations, options.exits)
         : { type: 'FeatureCollection' as const, features: [] });
     if (areas.features.length > 0) {
+      const areaColor = theme === 'dark' ? '#8a6a42' : '#e0a45c';
       map.addSource(SRC_AREAS, { type: 'geojson', data: areas });
+      // 폴리곤 영역 (합성 회랑 또는 실측 폴리곤)
       map.addLayer(
         {
           id: 'jido-subway-area',
           type: 'fill',
           source: SRC_AREAS,
           minzoom: 14.5,
+          filter: ['==', ['geometry-type'], 'Polygon'],
           paint: {
-            'fill-color': theme === 'dark' ? '#8a6a42' : '#e0a45c',
-            // 회랑 스트립이 겹치는 곳은 자연히 살짝 진해진다 (당근과 같은 질감)
+            'fill-color': areaColor,
+            // 겹치는 곳은 자연히 살짝 진해진다
             'fill-opacity': [
               'interpolate',
               ['linear'],
@@ -195,6 +199,32 @@ export function addSubwayLayers(map: MaplibreMap, options: SubwayLayerOptions): 
               15.5,
               theme === 'dark' ? 0.14 : 0.11,
             ],
+          },
+        },
+        before,
+      );
+      // 실측 지하통로 네트워크(선) — 실제 폭 느낌으로 줌에 따라 두꺼워지는 스트로크
+      map.addLayer(
+        {
+          id: 'jido-subway-area-path',
+          type: 'line',
+          source: SRC_AREAS,
+          minzoom: 14.5,
+          filter: ['==', ['geometry-type'], 'LineString'],
+          layout: { 'line-cap': 'round', 'line-join': 'round' },
+          paint: {
+            'line-color': areaColor,
+            'line-opacity': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              14.5,
+              0,
+              15.5,
+              theme === 'dark' ? 0.32 : 0.28,
+            ],
+            // 실폭 ~12m 근사 — 줌마다 2배
+            'line-width': ['interpolate', ['exponential', 2], ['zoom'], 14, 2.5, 16, 10, 18, 40],
           },
         },
         before,
