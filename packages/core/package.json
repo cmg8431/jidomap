@@ -1,0 +1,28 @@
+{
+  "name": "@jidomap/core",
+  "version": "0.0.1",
+  "description": "프레임워크 무관 한국형 지도 코어 — MapLibre 위에 한글 라벨·지하철·POI·오버레이를 얹는다",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "lint": "biome check .",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf node_modules .turbo dist"
+  },
+  "peerDependencies": {
+    "maplibre-gl": ">=4"
+  },
+  "devDependencies": {
+    "@jidomap/typescript": "workspace:*",
+    "@types/geojson": "^7946.0.14",
+    "@types/node": "catalog:",
+    "maplibre-gl": "catalog:",
+    "typescript": "catalog:"
+  }
+}

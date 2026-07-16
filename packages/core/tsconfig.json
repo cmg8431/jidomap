@@ -1,0 +1,9 @@
+{
+  "extends": "@jidomap/typescript/base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["geojson"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
