@@ -14,6 +14,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import proj4 from 'proj4';
 import * as shapefile from 'shapefile';
+import { parseWkt } from './wkt';
 
 // 국내 공공 SHP 에서 흔한 좌표계들
 proj4.defs(
@@ -61,7 +62,7 @@ function reproject(
 function pickName(props: Record<string, unknown> | null): string {
   if (!props) return '';
   for (const key of Object.keys(props)) {
-    if (/name|nm|명칭|시설명|지하도/i.test(key) && typeof props[key] === 'string') {
+    if (/stn_nm|name|nm|명칭|시설명|지하도/i.test(key) && typeof props[key] === 'string') {
       return props[key] as string;
     }
   }
@@ -70,8 +71,23 @@ function pickName(props: Record<string, unknown> | null): string {
 
 async function loadFeatures(input: string): Promise<GeoJSON.Feature[]> {
   if (/\.(geojson|json)$/i.test(input)) {
-    const raw = JSON.parse(await readFile(input, 'utf8')) as GeoJSON.FeatureCollection;
-    return raw.features ?? [];
+    const raw = JSON.parse(await readFile(input, 'utf8')) as
+      | GeoJSON.FeatureCollection
+      | { DATA?: Record<string, unknown>[] };
+    // 서울 열린데이터광장 Sheet JSON — DATA 배열의 WKT 컬럼에서 도형 추출
+    if ('DATA' in raw && Array.isArray(raw.DATA)) {
+      const features: GeoJSON.Feature[] = [];
+      for (const row of raw.DATA) {
+        for (const value of Object.values(row)) {
+          if (typeof value !== 'string' || !/^(MULTI)?(POLYGON|LINESTRING)/i.test(value.trim()))
+            continue;
+          const geometry = parseWkt(value);
+          if (geometry) features.push({ type: 'Feature', properties: row, geometry });
+        }
+      }
+      return features;
+    }
+    return (raw as GeoJSON.FeatureCollection).features ?? [];
   }
   if (/\.shp$/i.test(input)) {
     const features: GeoJSON.Feature[] = [];
@@ -99,8 +115,13 @@ if (!input) {
   process.exit(1);
 }
 
-const transform = makeTransform(srs);
-const features = (await loadFeatures(resolve(input)))
+const loaded = await loadFeatures(resolve(input));
+// 좌표가 이미 경위도 범위(한반도)면 재투영 생략
+const probe = JSON.stringify(loaded[0]?.geometry ?? '').match(/(-?\d+\.?\d*),\s*(-?\d+\.?\d*)/);
+const alreadyWgs = probe ? Math.abs(Number(probe[1])) <= 180 : false;
+const transform = makeTransform(alreadyWgs ? 'WGS84' : srs);
+if (alreadyWgs) console.log('좌표계 자동 감지: 이미 WGS84 — 재투영 생략');
+const features = loaded
   .filter((feature) => /Polygon|LineString/.test(feature.geometry?.type ?? ''))
   .map((feature) => ({
     type: 'Feature' as const,
