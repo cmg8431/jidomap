@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "bun install",
+  "buildCommand": "bunx turbo run build --filter=@jidomap/playground",
+  "outputDirectory": "apps/playground/dist"
+}
