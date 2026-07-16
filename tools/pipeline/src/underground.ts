@@ -146,5 +146,6 @@ if (sample) {
 
 const outPath = resolve(DATA_DIR, `subway/${region}-passages.json`);
 await mkdir(resolve(outPath, '..'), { recursive: true });
-await writeFile(outPath, JSON.stringify({ type: 'FeatureCollection', features }));
+// source 마커 — 파이프라인의 OSM 자동 추출이 이 파일을 덮어쓰지 않게 한다
+await writeFile(outPath, JSON.stringify({ type: 'FeatureCollection', source: 'public', features }));
 console.log(`저장: subway/${region}-passages.json (features=${features.length}, srs=${srs})`);

@@ -36,6 +36,41 @@ export async function buildSidoBoundaries() {
   return { type: 'FeatureCollection' as const, features };
 }
 
+/**
+ * 대한민국 시군구(admin_level=6) 경계를 추출한다.
+ * 시도보다 파일이 크므로 별도 파일(sigungu.json)로 지연 로드 전제.
+ */
+export async function buildSigunguBoundaries() {
+  const query = `
+    [out:json][timeout:900];
+    area["ISO3166-1"="KR"]->.kr;
+    relation(area.kr)["boundary"="administrative"]["admin_level"="6"];
+    out body;
+    >;
+    out skel qt;
+  `;
+  console.log('[boundaries] 시군구 경계 Overpass 쿼리…');
+  const response = await overpass(query);
+  const geojson = osmtogeojson(response as Parameters<typeof osmtogeojson>[0]);
+
+  const features = geojson.features
+    .filter((feature) => /Polygon/.test(feature.geometry?.type ?? ''))
+    .map((feature) => ({
+      type: 'Feature' as const,
+      properties: {
+        // 시군구는 ISO 코드가 없어 이름만 담는다 (행정코드 태그는 OSM 에 일관되게 없음)
+        name:
+          (feature.properties?.['name:ko'] as string | undefined) ??
+          (feature.properties?.name as string | undefined) ??
+          '',
+      },
+      geometry: quantizeGeometry(feature.geometry as GeoJSON.Geometry),
+    }));
+
+  console.log(`[boundaries] 시군구 ${features.length}개`);
+  return { type: 'FeatureCollection' as const, features };
+}
+
 /** 지오메트리 좌표 전체를 소수 5자리로 양자화 */
 function quantizeGeometry<T extends GeoJSON.Geometry>(geometry: T): T {
   const walk = (coords: unknown): unknown => {

@@ -26,13 +26,21 @@ PR 머지 → `@jidomap/data` publish → jsDelivr CDN(`@0` semver 범위)을 �
 - 빈 결과·부분 실패는 기존 스냅샷을 덮어쓰지 않음
 - 좌표는 소수 5자리(≈1m)로 양자화해 파일 크기 절감
 
+## 지하통로 소스 우선순위
+
+`generate` 가 권역별 지하통로를 OSM(tunnel·underground footway)에서 자동 추출한다.
+공공데이터 기반 파일(`source: "public"`, `generate:underground` 산출물)은 정밀판으로 취급해
+OSM 추출이 덮어쓰지 않는다 — 서울처럼 실측 데이터가 있으면 그쪽이 이긴다.
+
 ## 로드맵
 
-- **실제 지하통로 폴리곤** — 현재는 역+출구로 회랑을 합성하지만, 공공데이터로 교체 가능:
+- **실제 지하통로 폴리곤 전국 확장** — OSM 자동 추출은 들어갔고, 공공데이터 정밀판으로 교체 가능:
   - [서울시 지하철역 연계 지하도 공간정보 (OA-21213)](https://data.seoul.go.kr/dataList/OA-21213/S/1/datasetView.do) — 지하도 네트워크
   - [NGII 연속수치지형도](https://www.data.go.kr/data/15059721/fileData.do) — 지하보도·지하상가 레이어 (전국)
   - [서울시 도시계획시설(교통시설_도로외)](https://data.seoul.go.kr/dataList/OA-21130/S/1/datasetView.do?tab=A) — 지하보도 필터
   - 처리: EPSG:5174 → WGS84, CP949 인코딩. 라이선스는 항목별 공공누리 유형 확인
 - **POI 밀도** — 소상공인 상가정보 / Overture Places → 카테고리 매핑 후 권역별 GeoJSON
-- 시군구(admin_level=6) 경계
-- KTX·일반철도 역
+- ~~시군구(admin_level=6) 경계~~ → `boundaries/sigungu.json` 생성됨
+- KTX·일반철도 역 — [국가철도공단 역사정보](https://www.data.go.kr/data/15093755/fileData.do) 활용 가능
+- 역 좌표 검증 — [전국도시철도역사정보표준데이터](https://www.data.go.kr/data/15013205/standard.do)와 대조해 OSM 드리프트 감지
+- Overpass → [osm.kr non-military 추출본](https://tiles.osm.kr/) pbf 배치 추출 전환 검토 (군사시설 이슈 승계 + 미러 의존 제거)
