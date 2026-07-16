@@ -3,6 +3,7 @@ import gwangjuLinesRaw from './subway/gwangju-lines.json';
 import gwangjuStationsRaw from './subway/gwangju-stations.json';
 import seoulExitsRaw from './subway/seoul-exits.json';
 import seoulLinesRaw from './subway/seoul-lines.json';
+import seoulPassagesRaw from './subway/seoul-passages.json';
 import seoulStationsRaw from './subway/seoul-stations.json';
 
 /** 노선 지오메트리 속성 — ref(노선번호)와 공식 색상 */
@@ -44,6 +45,7 @@ export const seoulSubway: SubwayBundle = {
   lines: seoulLinesRaw as unknown as SubwayLines,
   stations: seoulStationsRaw as unknown as SubwayStations,
   exits: seoulExitsRaw as unknown as SubwayExits,
+  passages: seoulPassagesRaw as unknown as SubwayPassages,
 };
 
 /** 광주 도시철도 — OSM 추출 스냅샷 */
