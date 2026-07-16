@@ -1,0 +1,40 @@
+name: data-refresh
+
+on:
+  schedule:
+    # 매월 1일 03:17 UTC — OSM 원천에서 한국 지리 데이터 재추출
+    - cron: '17 3 1 * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Rebuild Korea geo data from OSM
+        run: bun run generate
+        working-directory: tools/pipeline
+
+      - name: Open PR if data changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: 'chore(data): monthly Korea geo refresh'
+          title: 'chore(data): monthly Korea geo refresh'
+          body: |
+            tools/pipeline 자동 실행 결과입니다.
+            - 원천: OpenStreetMap (Overpass API)
+            - 검토 포인트: 노선/역 수 급감 여부, meta.json updatedAt
+          branch: data-refresh
+          delete-branch: true
