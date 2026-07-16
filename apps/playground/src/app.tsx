@@ -31,6 +31,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { LIVE_VEHICLE_LAYER, LiveTransit } from './live-transit';
 
 /* ── 데모 데이터: 서울 랜드마크 ── */
 
@@ -124,6 +125,18 @@ function ClickInspector() {
     const handleClick = (event: MapMouseEvent) => {
       const el = event.originalEvent.target as HTMLElement;
       if (el.closest('.jido-marker')) return;
+      // 실시간 차량 클릭은 차량 팝업이 받는다
+      if (map.getLayer(LIVE_VEHICLE_LAYER)) {
+        const { x, y } = event.point;
+        const hits = map.queryRenderedFeatures(
+          [
+            [x - 6, y - 6],
+            [x + 6, y + 6],
+          ],
+          { layers: [LIVE_VEHICLE_LAYER] },
+        );
+        if (hits.length > 0) return;
+      }
       setPicked({ lng: event.lngLat.lng, lat: event.lngLat.lat });
     };
     map.on('click', handleClick);
@@ -284,6 +297,10 @@ export function App() {
   const [markers, setMarkers] = useState(true);
   const [route, setRoute] = useState(false);
   const [transport, setTransport] = useState(true);
+  const [live, setLive] = useState(true);
+  const [liveSubway, setLiveSubway] = useState(true);
+  const [liveBus, setLiveBus] = useState(true);
+  const [liveSpeed, setLiveSpeed] = useState(6);
   const [viewport, setViewport] = useState<MapViewport | null>(null);
   const [selected, setSelected] = useState<Landmark | null>(null);
   const [focusStation, setFocusStation] = useState<Station | null>(null);
@@ -387,6 +404,7 @@ export function App() {
       <BrandTone />
       {transport && <TransportEmphasis />}
       {subway && <SubwayLayer data={seoulSubway} />}
+      {live && <LiveTransit showSubway={liveSubway} showBus={liveBus} timeScale={liveSpeed} />}
       {poi && activeCategories.length > 0 && <PoiLayer categories={activeCategories} />}
       {boundaries && sido && (
         <MapGeoJSON
@@ -531,6 +549,45 @@ export function App() {
           {categoryChips}
         </Row>
         <Row label="시도 경계" code="<MapGeoJSON />" on={boundaries} onChange={setBoundaries} />
+      </section>
+
+      <section className="sec">
+        <h3 className="sec__title">실시간 (mock)</h3>
+        <Row label="버스·지하철 위치" code="<LiveTransit />" on={live} onChange={setLive}>
+          <div className="cat-chips">
+            <button
+              type="button"
+              data-active={liveSubway}
+              style={{ '--chip': '#00A23F' } as CSSProperties}
+              onClick={() => setLiveSubway(!liveSubway)}
+              className="cat-chip"
+            >
+              지하철
+            </button>
+            <button
+              type="button"
+              data-active={liveBus}
+              style={{ '--chip': '#3D5BAB' } as CSSProperties}
+              onClick={() => setLiveBus(!liveBus)}
+              className="cat-chip"
+            >
+              버스
+            </button>
+            <span className="chip-gap" />
+            {[1, 6, 15].map((speed) => (
+              <button
+                key={speed}
+                type="button"
+                data-active={liveSpeed === speed}
+                style={{ '--chip': accent } as CSSProperties}
+                onClick={() => setLiveSpeed(speed)}
+                className="cat-chip"
+              >
+                {speed}×
+              </button>
+            ))}
+          </div>
+        </Row>
       </section>
 
       <section className="sec">
